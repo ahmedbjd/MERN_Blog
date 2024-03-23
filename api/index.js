@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.Route.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 app.use(express.json());
+app.use(cors());
 
 app.listen(port, () => {
   console.log(`server listening on port ${port} ...`);
@@ -33,6 +35,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({
     success: false,
     statusCode,
-    message
-});
+    message,
+  });
 });
