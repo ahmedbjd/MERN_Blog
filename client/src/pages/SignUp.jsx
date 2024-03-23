@@ -20,26 +20,15 @@ const SignUp = () => {
       return setErrorMessage("Please fill out all fields");
     }
     try {
-      setErrorMessage(null);
-      setIsloading(true);
+        setErrorMessage(null);
+        setIsloading(true);
       const response = await axios.post('http://localhost:4000/api/auth/signup', formData);
-      console.log('Response', response); 
-      if (response.data.success === false){
-        return setErrorMessage(response.data.message)
-      }
       if (response.data.msg === 'Signup successful'){
         navigate('/sign-in');
       }
     } catch (error) {
-        console.log('Error submit data', error);
-  if (error.response && error.response.data && error.response.data.message) {
-    if (error.response.data.message.includes('duplicate key error')) {
-      return setErrorMessage('Username or email is already in use.');
-    }
-    // Handle other error messages
-    return setErrorMessage(error.response.data.message);
-  }
-    } finally {
+         setErrorMessage(error.response?.data?.message || 'An error occurred');
+  } finally {
     setIsloading(false);
   }
   } 
@@ -90,7 +79,7 @@ const SignUp = () => {
         </form>
         <div className='flex gap-3 mt-5'>
           <span>Have an account?</span>
-          <Link to='sign-in' className='text-blue-500'>Sign In</Link>
+          <Link to='/sign-in' className='text-blue-500'>Sign In</Link>
         </div>
         {errorMessage && (
           <Alert className='mt-5' color='failure'>{errorMessage}</Alert>
