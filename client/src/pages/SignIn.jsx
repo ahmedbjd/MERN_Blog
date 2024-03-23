@@ -2,14 +2,16 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/UserSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 const SignIn = () => {
 
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isloading, setIsloading] = useState(false);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const dispath = useDispatch();
+  const {isloading, error: errorMessage} = useSelector(state => state.user);
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value});
   }
@@ -17,20 +19,18 @@ const SignIn = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   if (!formData.email || !formData.password) {
-    return setErrorMessage('Please fill out all fields');
+    return dispath(signInFailure('Please fill out all fields'));
   }
   try {
-    setErrorMessage(null);
-    setIsloading(true);
+    dispath(signInStart());
     const response = await axios.post('http://localhost:4000/api/auth/signin', formData);
     if (response.data.msg === 'signin successful') {
+      dispath(signInSuccess(response.data.data));
       navigate('/');
     }
   } catch (error) {
-    setErrorMessage(error.response?.data?.message || 'An error occurred');
-  } finally {
-    setIsloading(false);
-  }
+    dispath(signInFailure(error.response.data.message));
+  } 
 }
 
   return (
@@ -48,7 +48,7 @@ const handleSubmit = async (e) => {
           <div>
             <Label value='Your email' />
             <TextInput
-              placeholder='Email'
+              placeholder='ahmedbjd06@gmail.com'
               type='email'
               id='email'
               onChange={handleChange}
@@ -58,7 +58,7 @@ const handleSubmit = async (e) => {
           <div>
             <Label value='Your password' />
             <TextInput
-              placeholder='Password'
+              placeholder='********'
               type='password'
               id='password'
               onChange={handleChange}
