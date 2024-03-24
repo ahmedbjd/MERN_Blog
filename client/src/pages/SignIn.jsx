@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/UserSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import OAuth from '../components/OAuth'
+import { baseURL } from '../../apiConfig';
 
 const SignIn = () => {
 
@@ -23,8 +25,8 @@ const handleSubmit = async (e) => {
   }
   try {
     dispath(signInStart());
-    const response = await axios.post('http://localhost:4000/api/auth/signin', formData);
-    if (response.data.msg === 'signin successful') {
+    const response = await axios.post(`${baseURL}/auth/signin`, formData);
+    if (response.status === 200) {
       dispath(signInSuccess(response.data.data));
       navigate('/');
     }
@@ -66,6 +68,7 @@ const handleSubmit = async (e) => {
             />
           </div>
           <Button gradientDuoTone='purpleToPink' type='submit' disabled={isloading}>{isloading ? (<><Spinner size='sm' /> <span className='pl-3'>Loading...</span></> ) : 'Sign In'}</Button>
+          <OAuth />
         </form>
         <div className='flex gap-3 mt-5'>
           <span>Dont Have an account?</span>

@@ -2,6 +2,7 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import OAuth from '../components/OAuth'
 
 const SignUp = () => {
 
@@ -76,6 +77,7 @@ const SignUp = () => {
             />
           </div>
           <Button gradientDuoTone='purpleToPink' type='submit' disabled={isloading}>{isloading ? (<><Spinner size='sm' /> <span className='pl-3'>Loading...</span></> ) : 'Sign Up'}</Button>
+          <OAuth/>
         </form>
         <div className='flex gap-3 mt-5'>
           <span>Have an account?</span>
